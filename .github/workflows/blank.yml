@@ -1,0 +1,29 @@
+name: Terraform Apply
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  terraform:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Terraform
+        uses: hashicorp/setup-terraform@v1
+
+      - name: Configure Snowflake CLI
+        run: |
+          curl -O https://raw.githubusercontent.com/snowflakedb/snowflake-connector-python/v2.8.1/src/snowflake/connector/__init__.py
+          pip install --upgrade pip
+          pip install snowflake-connector-python
+
+      - name: Terraform Init
+        run: terraform init
+
+      - name: Terraform Apply
+        run: terraform apply -auto-approve
